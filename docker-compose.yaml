@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  web:
+    image: nginx:1.19.5-alpine
+    ports:
+      - "18080:80"
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "15769:5769"
+  
+  mysql:
+    image: mysql:5.7
+    environment:
+      - "MYSQL_ROOT_PASSWORD=123"
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  web2:
+    image: httpd
+    ports:
+      - "28080:80"
+
+  alpine:
+    image: alpine
+    entrypoint:
+      - /bin/cat
+    stdin_open: true
+    tty: true

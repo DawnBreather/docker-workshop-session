@@ -1,0 +1,23 @@
+version: '2.4'
+services:
+  gateway:
+    image: traefik:v2.3.2
+    ports:
+      - "8080:8080" # HTTP exposed
+      - "8081:8081" # HTTP Administration exposed
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/traefik/certs:/certs:ro
+    environment:
+      - "bootstrap.memory_lock=true"
+      - "discovery.type=single-node"
+      - "logger.level=INFO"
+      - "xpack.security.enabled=true"
+      - "ELASTIC_PASSWORD=elastic1q2w3e"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    restart: always
